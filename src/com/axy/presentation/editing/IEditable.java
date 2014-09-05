@@ -7,5 +7,4 @@ public interface IEditable {
     void beginEdit();
     void endEdit(boolean commitChanges);
     boolean getIsEditing();
-    //test
 }
