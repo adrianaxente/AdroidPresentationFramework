@@ -1,16 +1,19 @@
 package com.axy.presentation.presentationModel;
 
 import com.axy.presentation.editing.IEditable;
+import com.axy.presentation.misc.ICloseable;
 import com.axy.presentation.model.AbstractModel;
-import com.axy.presentation.events.IPropertyChangedListener;
-import com.axy.presentation.events.PropertyChangedEventArg;
+import com.axy.presentation.model.observable.ObservableModel;
+import com.axy.presentation.observable.IPropertyChangedListener;
+import com.axy.presentation.observable.PropertyChangedEventArg;
+import com.axy.presentation.observable.PropertyChangedEventRecorder;
 import org.robobinding.presentationmodel.AbstractPresentationModel;
 
 /**
  * Created by adrianaxente on 04.09.2014.
  */
 //todo: implement property maps
-public abstract class AbstractViewModel<TModel extends AbstractModel<TModel>> extends AbstractPresentationModel implements IPropertyChangedListener<TModel>, IEditable
+public abstract class AbstractViewModel<TModel extends ObservableModel<TModel>> extends AbstractPresentationModel implements IPropertyChangedListener<TModel>, IEditable, ICloseable
 {
 
     // <editor-fold description="Private Fields">
@@ -18,6 +21,8 @@ public abstract class AbstractViewModel<TModel extends AbstractModel<TModel>> ex
     private TModel _model;
 
     private TModel _backupModel;
+
+    private PropertyChangedEventRecorder<TModel> _propertyChangeRecorder;
 
     // </editor-fold>
 
@@ -38,7 +43,7 @@ public abstract class AbstractViewModel<TModel extends AbstractModel<TModel>> ex
         }
 
         this._model = model;
-        this._model.propertyChangedEvent.addEventLister(this);
+        this._model.getPropertyChangedEvent().addEventLister(this);
     }
 
     // </editor-fold>
@@ -64,11 +69,12 @@ public abstract class AbstractViewModel<TModel extends AbstractModel<TModel>> ex
         if (this.getIsEditing())
             return;
 
-        this._model.propertyChangedEvent.removeEventListener(this);
+        this._model.getPropertyChangedEvent().removeEventListener(this);
         this._backupModel = this._model;
         this._model = this._model.createClone();
-        this._model.propertyChangedEvent.addEventLister(this);
-
+        this._model.getPropertyChangedEvent().addEventLister(this);
+        this._propertyChangeRecorder = new PropertyChangedEventRecorder<TModel>(this._model.getPropertyChangedEvent());
+        this._propertyChangeRecorder.StartRecording();
     }
 
     @Override
@@ -77,16 +83,18 @@ public abstract class AbstractViewModel<TModel extends AbstractModel<TModel>> ex
         if (!this.getIsEditing())
             return;
 
-        this._model.propertyChangedEvent.removeEventListener(this);
+        this._model.getPropertyChangedEvent().removeEventListener(this);
 
         if (commitChanges) {
             this._backupModel.copyFrom(this._model);
-            //todo: raise the recorded property changes on the backup model
+            this._propertyChangeRecorder.StopRecording();
+            this._propertyChangeRecorder.fire(this._backupModel.getPropertyChangedEvent());
         }
 
+        this._propertyChangeRecorder = null;
         this._model = this._backupModel;
         this._backupModel = null;
-        this._model.propertyChangedEvent.addEventLister(this);
+        this._model.getPropertyChangedEvent().addEventLister(this);
     }
 
     @Override
@@ -95,5 +103,15 @@ public abstract class AbstractViewModel<TModel extends AbstractModel<TModel>> ex
         return this._backupModel != null;
     }
 
-    // </editor-fold">
+    // </editor-fold>
+
+    // <editor-fold description="closable">
+
+    @Override
+    public void close()
+    {
+        this._model.getPropertyChangedEvent().removeEventListener(this);
+    }
+
+    // </editor-fold>
 }

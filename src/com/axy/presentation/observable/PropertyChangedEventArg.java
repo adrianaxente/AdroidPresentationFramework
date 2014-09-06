@@ -1,4 +1,6 @@
-package com.axy.presentation.events;
+package com.axy.presentation.observable;
+
+import com.axy.presentation.events.GenericEventArg;
 
 /**
  * Created by adrianaxente on 04.09.2014.

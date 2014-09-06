@@ -1,15 +1,16 @@
 package com.axy.presentation.presentationModel;
 
 import com.axy.presentation.model.AbstractModel;
-import com.axy.presentation.events.IPropertyChangedListener;
-import com.axy.presentation.events.PropertyChangedEventArg;
+import com.axy.presentation.model.observable.ObservableModel;
+import com.axy.presentation.observable.IPropertyChangedListener;
+import com.axy.presentation.observable.PropertyChangedEventArg;
 import org.robobinding.itempresentationmodel.AbstractItemPresentationModel;
 
 /**
  * Created by adrianaxente on 04.09.2014.
  */
 //todo: implement property maps
-public abstract class AbstractItemViewModel<TModel extends AbstractModel<TModel>> extends AbstractItemPresentationModel<TModel> implements IPropertyChangedListener<TModel>
+public abstract class AbstractItemViewModel<TModel extends ObservableModel<TModel>> extends AbstractItemPresentationModel<TModel> implements IPropertyChangedListener<TModel>
 {
 
     // <editor-fold description="Private Fields">
@@ -29,39 +30,6 @@ public abstract class AbstractItemViewModel<TModel extends AbstractModel<TModel>
 
     public int getIndex() { return this._index; }
 
-    public boolean getIsInTransaction()
-    {
-        return this._backupModel != null;
-    }
-
-    // </editor-fold>
-
-    // <editor-fold description="Public Methods">
-
-    public void startTransaction()
-    {
-        this._backupModel = this._model;
-        this._model = this._model.createClone();
-    }
-
-    public void commitTransaction()
-    {
-        this._backupModel.copyFrom(this._model);
-        this._model = this._backupModel;
-        this._backupModel = null;
-
-        //todo: fire property changes if any
-    }
-
-    public void rollbackTransaction()
-    {
-        this._model = this._backupModel;
-        this._backupModel = null;
-
-        //todo: fire property changes if any
-    }
-
-    // </editor-fold>
 
     @Override
     protected void doUpdateData(int i, TModel model) {
@@ -73,7 +41,7 @@ public abstract class AbstractItemViewModel<TModel extends AbstractModel<TModel>
 
         this._model = model;
         this._index = i;
-        this._model.propertyChangedEvent.addEventLister(this);
+        this._model.getPropertyChangedEvent().addEventLister(this);
     }
 
     @Override

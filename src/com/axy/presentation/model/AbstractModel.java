@@ -1,23 +1,13 @@
 package com.axy.presentation.model;
 
-import com.axy.presentation.editing.IEditable;
-import com.axy.presentation.events.PropertyChangedEvent;
-import com.axy.presentation.events.PropertyChangedEventArg;
+import com.axy.presentation.observable.PropertyChangedEvent;
+import com.axy.presentation.observable.PropertyChangedEventArg;
 
 /**
  * Created by adrianaxente on 03.09.2014.
  */
 public abstract class AbstractModel<TThis extends AbstractModel<TThis>> implements Cloneable
 {
-
-    // <editor-fold description="Fields">
-
-    public transient PropertyChangedEvent<TThis> propertyChangedEvent = new PropertyChangedEvent<TThis>();
-
-    // </editor-fold>
-
-    // <editor-fold description="Identity">
-
     /**
      * Gets the identity of this instance
      * @return
@@ -49,7 +39,8 @@ public abstract class AbstractModel<TThis extends AbstractModel<TThis>> implemen
     {
         try
         {
-            return (TThis)this.clone();
+            TThis clone =  (TThis)this.clone();
+            return  clone;
         }
         catch (CloneNotSupportedException ex)
         {
@@ -62,22 +53,6 @@ public abstract class AbstractModel<TThis extends AbstractModel<TThis>> implemen
     protected Object clone() throws CloneNotSupportedException
     {
         return super.clone();
-    }
-
-    // </editor-fold>
-
-    // <editor-fold description="Observation">
-
-    protected boolean RaisePropertyChanged(Object sender, String propertyName, Object oldValue, Object newValue)
-    {
-        if (oldValue != newValue) {
-            this.propertyChangedEvent.fire(
-                    sender,
-                    new PropertyChangedEventArg<TThis>((TThis) this, propertyName, oldValue, newValue));
-            return true;
-        }
-
-        return false;
     }
 
     // </editor-fold>
