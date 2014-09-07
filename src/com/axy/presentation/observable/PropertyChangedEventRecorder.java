@@ -2,6 +2,7 @@ package com.axy.presentation.observable;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import com.axy.presentation.events.IEventListener;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class PropertyChangedEventRecorder<TSource>
 
     private PropertyChangedEvent _propertyChangedEvent;
 
-    private IPropertyChangedListener _propertyChangedListener = null;
+    private IEventListener<PropertyChangedEventArgs> _propertyChangedListener = null;
 
     private boolean _isRecording = false;
 
@@ -29,7 +30,7 @@ public class PropertyChangedEventRecorder<TSource>
 
         this._propertyChangedEvent = propertyChangedEvent;
         this._propertyChangedListener =
-                new IPropertyChangedListener()
+                new IPropertyChangeEventListener()
                 {
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     @Override

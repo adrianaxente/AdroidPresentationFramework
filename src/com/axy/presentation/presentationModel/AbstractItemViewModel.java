@@ -1,7 +1,9 @@
 package com.axy.presentation.presentationModel;
 
+import com.axy.presentation.events.Event;
+import com.axy.presentation.events.IEventListener;
 import com.axy.presentation.model.observable.ObservableModel;
-import com.axy.presentation.observable.IPropertyChangedListener;
+import com.axy.presentation.observable.IPropertyChangeEventListener;
 import com.axy.presentation.observable.PropertyChangedEventArgs;
 import org.robobinding.itempresentationmodel.AbstractItemPresentationModel;
 
@@ -9,7 +11,7 @@ import org.robobinding.itempresentationmodel.AbstractItemPresentationModel;
  * Created by adrianaxente on 04.09.2014.
  */
 //todo: implement property maps
-public abstract class AbstractItemViewModel<TModel extends ObservableModel<TModel>> extends AbstractItemPresentationModel<TModel> implements IPropertyChangedListener
+public abstract class AbstractItemViewModel<TModel extends ObservableModel<TModel>> extends AbstractItemPresentationModel<TModel> implements IPropertyChangeEventListener
 {
 
     // <editor-fold description="Private Fields">
