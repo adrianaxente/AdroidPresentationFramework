@@ -5,56 +5,44 @@ import java.util.LinkedList;
 /**
  * Created by adrianaxente on 01.09.2014.
  */
-public class Event
+public class Event<TEventArg extends EventArgs, TEventListener extends IEventListener<TEventArg>>
 {
-    private LinkedList<IEventListener> _listeners;
+    private LinkedList<TEventListener> _listeners;
 
-    public void addEventLister(IEventListener listener)
+    public void addEventLister(TEventListener listener)
     {
         if (listener == null)
-        {
             throw new NullPointerException("listener is null");
-        }
 
         if (this._listeners == null)
-        {
-            this._listeners = new LinkedList<IEventListener>();
-        }
+            this._listeners = new LinkedList<TEventListener>();
 
         this._listeners.add(listener);
     }
 
-    public void removeEventListener(IEventListener listener)
+    public void removeEventListener(TEventListener listener)
     {
         if (listener == null)
-        {
             throw new NullPointerException("listener is null");
-        }
 
         if (this._listeners == null)
-        {
             return;
-        }
 
         this._listeners.removeFirstOccurrence(listener);
 
         if (this._listeners.isEmpty())
-        {
             this._listeners = null;
-        }
     }
 
-    public void fire(Object sender, EventArg arg)
+    public void fire(TEventArg arg)
     {
         if (arg == null)
-        {
             throw new NullPointerException("arg is null");
-        }
 
-        for(IEventListener listener : this._listeners)
-        {
-            listener.execute(sender, arg);
-        }
+        if (this._listeners == null)
+            return;
+
+        for(TEventListener listener : this._listeners)
+            listener.onExecute(arg);
     }
-
 }

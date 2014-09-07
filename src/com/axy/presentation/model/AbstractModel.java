@@ -1,8 +1,5 @@
 package com.axy.presentation.model;
 
-import com.axy.presentation.observable.PropertyChangedEvent;
-import com.axy.presentation.observable.PropertyChangedEventArg;
-
 /**
  * Created by adrianaxente on 03.09.2014.
  */

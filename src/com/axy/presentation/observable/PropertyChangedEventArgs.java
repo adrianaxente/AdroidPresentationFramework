@@ -1,11 +1,12 @@
 package com.axy.presentation.observable;
 
-import com.axy.presentation.events.GenericEventArg;
+
+import com.axy.presentation.events.EventArgs;
 
 /**
  * Created by adrianaxente on 04.09.2014.
  */
-public class PropertyChangedEventArg<TSource> extends GenericEventArg<TSource>
+public class PropertyChangedEventArgs extends EventArgs
 {
     // <editor-fold description="Private Fields">
 
@@ -18,9 +19,9 @@ public class PropertyChangedEventArg<TSource> extends GenericEventArg<TSource>
 
     // <editor-fold description="Constructor">
 
-    public PropertyChangedEventArg(TSource source, String _propertyName, Object newValue, Object oldValue)
+    public PropertyChangedEventArgs(Object sender, String _propertyName, Object newValue, Object oldValue)
     {
-        super(source);
+        super(sender);
         this._propertyName = _propertyName;
         this._newValue = newValue;
         this._oldValue = oldValue;

@@ -11,15 +11,15 @@ import java.util.Map;
  */
 public class PropertyChangedEventRecorder<TSource>
 {
-    private Map<String, PropertyChangedEventRecord<TSource>>_eventMap = new LinkedHashMap<String, PropertyChangedEventRecord<TSource>>();
+    private Map<String, PropertyChangedEventArgs>_eventMap = new LinkedHashMap<String, PropertyChangedEventArgs>();
 
-    private PropertyChangedEvent<TSource> _propertyChangedEvent;
+    private PropertyChangedEvent _propertyChangedEvent;
 
-    private IPropertyChangedListener<TSource> _propertyChangedListener = null;
+    private IPropertyChangedListener _propertyChangedListener = null;
 
     private boolean _isRecording = false;
 
-    public PropertyChangedEventRecorder(PropertyChangedEvent<TSource> propertyChangedEvent)
+    public PropertyChangedEventRecorder(PropertyChangedEvent propertyChangedEvent)
             throws IllegalArgumentException
     {
         if (propertyChangedEvent == null)
@@ -29,16 +29,16 @@ public class PropertyChangedEventRecorder<TSource>
 
         this._propertyChangedEvent = propertyChangedEvent;
         this._propertyChangedListener =
-                new IPropertyChangedListener<TSource>()
+                new IPropertyChangedListener()
                 {
                     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
                     @Override
-                    public void execute(Object sender, PropertyChangedEventArg<TSource> arg) {
+                    public void onExecute(PropertyChangedEventArgs arg) {
                         String propertyName = arg.getPropertyName();
 
                         PropertyChangedEventRecorder.this._eventMap.put(
                                 propertyName,
-                                new PropertyChangedEventRecord<TSource>(sender, arg));
+                                arg);
                     }
                 };
     }
@@ -61,7 +61,7 @@ public class PropertyChangedEventRecorder<TSource>
         this._isRecording = false;
     }
 
-    public void fire(PropertyChangedEvent<TSource> propertyChangedEvent) throws IllegalArgumentException
+    public void fire(PropertyChangedEvent propertyChangedEvent) throws IllegalArgumentException
     {
         if (propertyChangedEvent == null)
             throw new IllegalArgumentException("propertyChangedEvent");
@@ -69,11 +69,11 @@ public class PropertyChangedEventRecorder<TSource>
         if (this.getIsRecording())
             this._propertyChangedEvent.removeEventListener(this._propertyChangedListener);
 
-        for(Map.Entry<String, PropertyChangedEventRecord<TSource>> entry: this._eventMap.entrySet())
+        for(Map.Entry<String, PropertyChangedEventArgs> entry: this._eventMap.entrySet())
         {
-            PropertyChangedEventRecord<TSource> record = entry.getValue();
+            PropertyChangedEventArgs record = entry.getValue();
 
-            propertyChangedEvent.fire(record.getSender(), record.getEventArgs());
+            propertyChangedEvent.fire(entry.getValue());
         }
 
         this._eventMap.clear();

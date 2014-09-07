@@ -1,10 +1,10 @@
 package com.axy.presentation.observable;
 
-import com.axy.presentation.events.IGenericEventListenerBase;
+import com.axy.presentation.events.IEventListener;
 
 /**
  * Created by adrianaxente on 04.09.2014.
  */
-public interface IPropertyChangedListener<TSource> extends IGenericEventListenerBase<TSource, PropertyChangedEventArg<TSource>>
+public interface IPropertyChangedListener extends IEventListener<PropertyChangedEventArgs>
 {
 }

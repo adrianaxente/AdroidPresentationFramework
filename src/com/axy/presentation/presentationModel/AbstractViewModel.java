@@ -2,10 +2,9 @@ package com.axy.presentation.presentationModel;
 
 import com.axy.presentation.editing.IEditable;
 import com.axy.presentation.misc.ICloseable;
-import com.axy.presentation.model.AbstractModel;
 import com.axy.presentation.model.observable.ObservableModel;
 import com.axy.presentation.observable.IPropertyChangedListener;
-import com.axy.presentation.observable.PropertyChangedEventArg;
+import com.axy.presentation.observable.PropertyChangedEventArgs;
 import com.axy.presentation.observable.PropertyChangedEventRecorder;
 import org.robobinding.presentationmodel.AbstractPresentationModel;
 
@@ -13,7 +12,7 @@ import org.robobinding.presentationmodel.AbstractPresentationModel;
  * Created by adrianaxente on 04.09.2014.
  */
 //todo: implement property maps
-public abstract class AbstractViewModel<TModel extends ObservableModel<TModel>> extends AbstractPresentationModel implements IPropertyChangedListener<TModel>, IEditable, ICloseable
+public abstract class AbstractViewModel<TModel extends ObservableModel<TModel>> extends AbstractPresentationModel implements IPropertyChangedListener, IEditable, ICloseable
 {
 
     // <editor-fold description="Private Fields">
@@ -53,9 +52,9 @@ public abstract class AbstractViewModel<TModel extends ObservableModel<TModel>> 
     public TModel getModel(){ return  this._model; }
 
     @Override
-    public void execute(Object sender, PropertyChangedEventArg<TModel> arg)
+    public void onExecute(PropertyChangedEventArgs arg)
     {
-        if (sender != this) {
+        if (arg != null && arg.getSender() != this) {
             this.refreshPresentationModel();
             //this.firePropertyChange(arg.getPropertyName());
         }
