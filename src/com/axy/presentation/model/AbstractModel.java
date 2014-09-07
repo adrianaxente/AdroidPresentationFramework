@@ -5,12 +5,6 @@ package com.axy.presentation.model;
  */
 public abstract class AbstractModel<TThis extends AbstractModel<TThis>> implements Cloneable
 {
-    /**
-     * Gets the identity of this instance
-     * @return
-     */
-    public abstract long getId();
-
     // </editor-fold>
 
     // <editor-fold description="Cloning & copying">

@@ -3,7 +3,8 @@
           package="com.axy.presentation"
           android:versionCode="9"
           android:versionName="9.0">
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
+    <application android:label="@string/app_name"
+                 android:icon="@drawable/ic_launcher">
         <activity android:name="ACTIVITY_ENTRY_NAME"
                   android:label="@string/app_name">
             <intent-filter>

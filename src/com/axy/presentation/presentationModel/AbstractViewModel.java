@@ -1,8 +1,7 @@
 package com.axy.presentation.presentationModel;
 
 import com.axy.presentation.editing.IEditable;
-import com.axy.presentation.events.IEventListener;
-import com.axy.presentation.misc.ICloseable;
+import com.axy.misc.ICloseable;
 import com.axy.presentation.model.observable.ObservableModel;
 import com.axy.presentation.observable.IPropertyChangeEventListener;
 import com.axy.presentation.observable.PropertyChangedEventArgs;
